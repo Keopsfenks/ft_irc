@@ -6,14 +6,30 @@
 #define FT_IRC_SERVER_HPP
 
 #include <iostream>
+#include <sys/socket.h>
+#include <sys/poll.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <poll.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdexcept>
+#include <cerrno>
+#include <string>
+#include <algorithm>
 #include <vector>
+#include <map>
 
 class Server {
 private:
 	std::string	pass;
 	int 		port;
-public:
 
+	int			socket;
+public:
+	Server(int port, std::string pass);
+	int CreateSocket();
 };
 
 
