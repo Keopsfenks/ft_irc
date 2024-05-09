@@ -36,3 +36,4 @@
 cmake-build-debug
 CmakeLists.txt
 .idea
+test.cpp
