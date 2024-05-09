@@ -18,4 +18,3 @@
 #include "../Server/Server.hpp"
 
 #define MAX_CLIENTS 10
-#define ERROR -1

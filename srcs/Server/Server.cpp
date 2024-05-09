@@ -17,15 +17,15 @@ void Server::InitializeServer() {
 	int opt = 1;
 	this->sockFD = this->CreateSocket();
 
-	if (setsockopt(this->sockFD, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == ERROR)
+	if (setsockopt(this->sockFD, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 		throw std::runtime_error("Setsockopt created as failed!");
 	memset(&this->serverAddress, 0, sizeof(this->serverAddress));
 	this->serverAddress.sin_family = AF_INET;
 	this->serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
 	this->serverAddress.sin_port = htons(this->port);
-	if (bind(this->sockFD, reinterpret_cast<struct sockaddr *>(&this->serverAddress), sizeof(this->serverAddress)) == ERROR)
+	if (bind(this->sockFD, reinterpret_cast<struct sockaddr *>(&this->serverAddress), sizeof(this->serverAddress)) < 0)
 		throw std::runtime_error("Bind created as failed!");
-	if (listen(this->sockFD, MAX_CLIENTS) == ERROR)
+	if (listen(this->sockFD, MAX_CLIENTS) < 0)
 		throw std::runtime_error("Listen mode as failed!");
 	
 	poll_fd.resize(1);
