@@ -2,36 +2,26 @@
 // Created by sgurb on 6.05.2024.
 //
 
+#pragma once
 #ifndef FT_IRC_SERVER_HPP
 #define FT_IRC_SERVER_HPP
 
-#include <iostream>
-#include <sys/socket.h>
-#include <sys/poll.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <poll.h>
-#include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdexcept>
-#include <cerrno>
-#include <string>
-#include <algorithm>
-#include <vector>
-#include <map>
-
-#define MAX_CLIENTS 10
+#include "../includes/ft_irc.hpp"
 
 class Server {
 private:
 	std::string	pass;
 	int 		port;
-	int			socket;
+	int		    sockFD;
 
 	struct sockaddr_in		serverAddress;
+	std::vector<struct pollfd> poll_fd;
+	std::vector<Client *> clients;
 public:
 	int CreateSocket();
+	void InitializeServer();
+	void ClientCreated();
+	void Start();
 	Server(int port, std::string pass);
 	~Server();
 };

@@ -1,4 +1,4 @@
-#include "Server/Server.hpp"
+#include "includes/ft_irc.hpp"
 
 int main(int ac, char **av) {
 	try {
@@ -6,7 +6,7 @@ int main(int ac, char **av) {
 			throw std::runtime_error("This server only two parameters accepted!");
 		}
 		Server *server = new Server(std::atoi(av[1]), av[2]);
-		(void)server;
+		server->Start();
 	}
 	catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;
