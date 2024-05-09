@@ -21,15 +21,19 @@
 #include <vector>
 #include <map>
 
+#define MAX_CLIENTS 10
+
 class Server {
 private:
 	std::string	pass;
 	int 		port;
-
 	int			socket;
+
+	struct sockaddr_in		serverAddress;
 public:
-	Server(int port, std::string pass);
 	int CreateSocket();
+	Server(int port, std::string pass);
+	~Server();
 };
 
 
