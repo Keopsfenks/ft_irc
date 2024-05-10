@@ -2,6 +2,8 @@ NAME	=	ircserv
 SRCS	=	$(wildcard srcs/*.cpp) \
 			$(wildcard srcs/Server/*.cpp) \
 			$(wildcard srcs/Client/*.cpp) \
+			$(wildcard srcs/Commands/*.cpp) \
+			$(wildcard srcs/Commands/sub_commands/*.cpp)
 
 OBJS	=	$(SRCS:.cpp=.o)
 

@@ -16,5 +16,6 @@
 
 #include "../Client/Client.hpp"
 #include "../Server/Server.hpp"
+#include "../Commands/Commands.hpp"
 
 #define MAX_CLIENTS 10

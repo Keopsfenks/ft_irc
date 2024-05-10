@@ -17,6 +17,7 @@ void Server::InitializeServer() {
 	int opt = 1;
 	this->sockFD = this->CreateSocket();
 
+	//soketin bağlantı sonlandıktan hemen sonra yeniden kullanılabilmesini sağlar.
 	if (setsockopt(this->sockFD, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 		throw std::runtime_error("Setsockopt created as failed!");
 	memset(&this->serverAddress, 0, sizeof(this->serverAddress));
@@ -73,5 +74,6 @@ Server::Server(int port, std::string pass) {
 
 Server::~Server() {
 	close (this->sockFD);
+	delete (this);
 	std::cout << "Server Closed!" << std::endl;
 }
