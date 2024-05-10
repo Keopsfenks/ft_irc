@@ -27,40 +27,38 @@ void Server::InitializeServer() {
 		throw std::runtime_error("Bind created as failed!");
 	if (listen(this->sockFD, MAX_CLIENTS) < 0)
 		throw std::runtime_error("Listen mode as failed!");
-	
-	poll_fd.resize(1);
-	poll_fd[0].fd = this->sockFD;
-	poll_fd[0].events = POLLIN;
-
+	FD_ZERO(&this->master);
+	FD_SET(this->sockFD, &this->master);
 }
 
-void Server::ClientCreated() {
-		if (poll_fd[0].revents & POLLIN) {
-			struct sockaddr_in clientAddress;
-			socklen_t clientLen = sizeof(clientAddress);
-			int clientFD = accept(this->sockFD, reinterpret_cast<struct sockaddr *>(&clientAddress), &clientLen);
-			if (clientFD < 0)
-				throw std::runtime_error("Accept mode as failed!");
-			else {
-				Client *client = new Client(clientFD);
-				clients.push_back(client);
-				std::cout << "New connection from " << inet_ntoa(clientAddress.sin_addr) << ":" << ntohs(clientAddress.sin_port) << std::endl;
-				fcntl(clientFD, F_SETFL, O_NONBLOCK);
-				poll_fd.resize(poll_fd.size() + 1);
-				poll_fd[poll_fd.size() - 1].fd = clientFD;
-				poll_fd[poll_fd.size() - 1].events = POLLIN;
-		}
-	}
+void Server::ClientCreated(fd_set &tmpMaster) {
+    if (FD_ISSET(sockFD, &tmpMaster)) {
+        struct sockaddr_in clientAddress;
+        socklen_t clientLen = sizeof(clientAddress);
+        int clientFD = accept(this->sockFD, reinterpret_cast<struct sockaddr *>(&clientAddress), &clientLen);
+        if (clientFD < 0)
+            throw std::runtime_error("Accept mode as failed!");
+        else {
+            Client *client = new Client(clientFD);
+            clients.push_back(client);
+            std::cout << "New connection from " << inet_ntoa(clientAddress.sin_addr) << ":" << ntohs(clientAddress.sin_port) << std::endl;
+            FD_SET(clientFD, &tmpMaster);
+        }
+    }
 }
 
 void Server::Start() {
-	while (poll(&poll_fd[0], poll_fd.size(), -1)) {
-		for (size_t i = 0; i < poll_fd.size(); i++) {
-			if (poll_fd[i].revents & POLLIN) {
-				this->ClientCreated();
-			}
-		}
-	}
+    while (true) {
+        fd_set tmpMaster = this->master;
+        if (select(FD_SETSIZE, &tmpMaster, nullptr, nullptr, nullptr) < 0)
+            throw std::runtime_error("Select mode as failed!");
+        this->ClientCreated(tmpMaster);
+        for (int i = 0; i < clients.size(); i++) {
+            if (FD_ISSET(clients[i]->getSocket(), &tmpMaster)) {
+                
+            }
+        }  
+    }
 }
 
 Server::Server(int port, std::string pass) {
