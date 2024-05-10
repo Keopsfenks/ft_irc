@@ -53,9 +53,10 @@ void Server::Start() {
         if (select(FD_SETSIZE, &tmpMaster, nullptr, nullptr, nullptr) < 0)
             throw std::runtime_error("Select mode as failed!");
         this->ClientCreated(tmpMaster);
-        for (int i = 0; i < clients.size(); i++) {
+        char buffer[1024] = {0};
+        for (size_t i = 0; i < clients.size(); i++) {
             if (FD_ISSET(clients[i]->getSocket(), &tmpMaster)) {
-                
+                clients[i]->setRecData(recv(clients[i]->getSocket(), buffer, sizeof(buffer), 0));
             }
         }  
     }

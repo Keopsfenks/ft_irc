@@ -7,11 +7,12 @@ class Client
 {
     private:
         int         socket;
-        bool        logged_in;
-        std::string user_name;
-        std::string nick_name;
+        bool        loggedIn;
+        std::string userName;
+        std::string nickName;
         std::string pass;
         std::string ip;
+        int     recData;
     public:
 		Client();
 		Client(int sockfd);
@@ -21,6 +22,7 @@ class Client
         std::string getNickName();
         std::string getPass();
         std::string getIp();
+        int         getRecData();
 
 		void        print(std::string str);
 		void        setSocket(int sockfd);
@@ -29,6 +31,7 @@ class Client
         void        setNickName(std::string nick_name);
         void        setPass(std::string pass);
 		void		setIp(std::string ip);
+        void        setRecData(int data);
 
 
 		~Client();
